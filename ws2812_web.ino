@@ -7,7 +7,7 @@ uint8_t FlagResetWifi = 0;
 #include "TimeNTP.h"
 #include "Web.h"
 
-SET_LOOP_TASK_STACK_SIZE(35*1024); // Задаем размер стека для Loop. Для esp32
+SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop. Для esp32
 
 unsigned long timer = 30000;
 

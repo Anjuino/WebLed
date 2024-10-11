@@ -14,8 +14,8 @@
 
 #define OFF     250
 
-//#define PIN 27 // esp32
-#define PIN 0 // esp8266 - D3
+#define PIN 27 // esp32
+//#define PIN 0 // esp8266 - D3
 
 uint16_t CountLed = 0;
 //#define count_led 120 // количество светодиодов 4 метра

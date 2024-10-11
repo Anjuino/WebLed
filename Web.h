@@ -1,9 +1,9 @@
-#include <ESP8266WiFi.h>        //esp8266
-#include <WiFiClient.h>         //esp8266
-#include <ESP8266WebServer.h>   //esp8266
+//#include <ESP8266WiFi.h>        //esp8266
+//#include <WiFiClient.h>         //esp8266
+//#include <ESP8266WebServer.h>   //esp8266
 
-//#include <WiFi.h>        //esp32
-//#include <WebServer.h>   //esp32
+#include <WiFi.h>        //esp32
+#include <WebServer.h>   //esp32
 
 #include "page.h"
 #include "SettingPage.h"
@@ -12,8 +12,8 @@
 //const char* ssid = "Led";  
 //const char* password = "12345678"; 
 
-ESP8266WebServer server (80);     //esp8266
-//WebServer server(80);           // esp32
+//ESP8266WebServer server (80);     //esp8266
+WebServer server(80);           // esp32
 
 void ApInit () 
 {
@@ -110,6 +110,7 @@ void handleblind (void) {
   /*EEPROM.put (4, Blind);
   EEPROM.commit ();*/
 }
+
 void handlereset (void) {
   String page = SettingPage;
   server.send (200, "text/html", page);
@@ -172,6 +173,84 @@ void handleeffects (void) {
   Ws2812SetMode (Tag);
 }
 
+void handleGetState (void) {
+
+  if (stateOnOff) server.send (200, "text/plane", "true");
+  else            server.send (200, "text/plane", "false");
+
+}
+
+void SetTime (String time, String state) {
+
+  if (time) {
+    Serial.println (time);
+    char *str = strdup (time.c_str());
+    char delimiters[] = ":";
+
+    char *token = strtok (str, delimiters);
+    String HourT = token;
+
+    token = strtok(NULL, delimiters);
+    String MinuteT = token;
+
+    if (HourT.charAt(0) == '0') {
+      String H = String (HourT.charAt(1));
+      Hour = H.toInt();
+    }
+    else Hour = HourT.toInt();
+
+    if (MinuteT.charAt(0) == '0') {
+      String T = String (MinuteT.charAt(1));
+      Minute = T.toInt();
+    }
+    else Minute = MinuteT.toInt();
+  }
+
+  if (state == "true")   server.send (200, "text/plane", "OK");
+  if (state == "false")  server.send (200, "text/plane", "OKwithoutSheld");
+  if (state == "Non")    server.send (200, "text/plane", "false");
+}
+
+void handleLedOffTime (void) {
+
+  String State = server.arg ("state");
+
+  if (State == "true") {
+    stateOnOff = true;
+
+    String Time = server.arg ("T");
+
+    SetTime (Time, State);
+
+    OldTime = Time;
+  }
+
+  else {
+    stateOnOff = false;
+
+    String Time = server.arg ("T");
+
+    if (OldTime == Time) SetTime (Time, "Non");
+    else                 SetTime (Time, State);
+
+    OldTime = Time;
+  }                
+}
+
+
+void handleGetTime (void) {
+
+  String HourT;
+  String MinuteT;
+
+  HourT = String(Hour);
+  MinuteT = String(Minute);
+
+  String TimeAll = HourT + ":" + MinuteT;
+
+  server.send (200, "text/plane", TimeAll);
+}
+
 
 void ServerStart (void) {
   if (FlagLed) server.on ("/", handleSettingPage);                     // Страница при первом запуске
@@ -184,6 +263,10 @@ void ServerStart (void) {
   server.on ("/speed", handlespeed);
   server.on ("/page.html", handlereset);
   server.on ("/setcount", handleSetCount);
-  server.on ("/resetWifi", handleResetWifi);                     
+  server.on ("/resetWifi", handleResetWifi);
+
+  server.on ("/getState", handleGetState);
+  server.on ("/ledofftime", handleLedOffTime);  
+  server.on ("/getTime", handleGetTime);                    
   server.begin ();
 }

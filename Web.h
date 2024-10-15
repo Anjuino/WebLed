@@ -40,6 +40,7 @@ void ApInit ()
     Serial.println("MDNS started");
   } else Serial.println("MDNS false");
 
+  MDNS.addService("http", "tcp", 80);
   /*WiFi.softAP(ssid, password);
   IPAddress local_ip(192,168,2,1);
   IPAddress gateway(192,168,2,1);
@@ -157,17 +158,22 @@ void handleeffects (void) {
 
 void handleGetState (void) 
 {
+  String On = "NO";
+  String Off = "NO";
 
-  String On = server.arg ("On");
-  String Off = server.arg ("Off");
+  On = server.arg ("On");
+  Off = server.arg ("Off");
 
-  if (Off) {
+  Serial.println (On);
+  Serial.println (Off);
+
+  if (Off == "2") {
     if (stateOff)   server.send (200, "text/plane", "true");
     else            server.send (200, "text/plane", "false");
   }
 
-  if (On) {
-    if (stateOn)   server.send (200, "text/plane", "true");
+  if (On == "1") {
+    if (stateOn)    server.send (200, "text/plane", "true");
     else            server.send (200, "text/plane", "false");
   }
 
@@ -180,7 +186,7 @@ void handleGetBlind (void)
 
 void handleGetSpeed (void) 
 {
-  server.send (200, "text/plane", String(Speed));
+  server.send (200, "text/plane", String (Speed));
 }
 
 void SetTime (String time, String state, bool IsOnOff) 
@@ -280,19 +286,24 @@ void handleGetTimeOnOff (void) {
 
   String HourT;
   String MinuteT;
-  String TimeAll;
+  String TimeAll = "NOTIME";
+  String On = "NO";
+  String Off = "NO";
 
-  String On = server.arg ("On");
-  String Off = server.arg ("Off");
+  On = server.arg ("On");
+  Off = server.arg ("Off");
 
-  if (Off) {
+  Serial.println (On);
+  Serial.println (Off);
+
+  if (Off == "2") {
     HourT = String(HourOff);
     MinuteT = String(MinuteOff);
 
     TimeAll = HourT + ":" + MinuteT;
   }
 
-  if (On) {
+  if (On == "1") {
     HourT = String(HourOn);
     MinuteT = String(MinuteOn);
 

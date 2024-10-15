@@ -45,9 +45,9 @@ const char SettingPage[] PROGMEM = R"=====(
 
 function onload () {
    GetStateOnOff("Off");
-   GetStateOnOff("On");
-
    GetTime("Off");
+   
+   GetStateOnOff("On");
    GetTime("On");
 }
 
@@ -87,8 +87,8 @@ function GetStateOnOff(In1) {
       } 
       }
    };
-   if (In1 == "On")   xhttp.open("GET", "getState?On = Ok", true);
-   if (In1 == "Off")  xhttp.open("GET", "getState?Off = Ok", true);
+   if (In1 == "On")   xhttp.open("GET", "getState?On=1", true);
+   if (In1 == "Off")  xhttp.open("GET", "getState?Off=2", true);
    xhttp.send();
 }
 
@@ -112,8 +112,8 @@ function GetTime(In1) {
    
    }
    };
-   if (In1 == "On") xhttp.open("GET", "getTime?On = Ok", true);
-   if (In1 == "Off") xhttp.open("GET", "getTime?Off = Ok", true);
+   if (In1 == "On") xhttp.open("GET", "getTime?On=1", true);
+   if (In1 == "Off") xhttp.open("GET", "getTime?Off=2", true);
    xhttp.send();
 }
 

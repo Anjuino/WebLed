@@ -60,7 +60,7 @@ void setup() {
     xTaskCreatePinnedToCore (
       TaskSheldure, 
       "Task1",      
-      10000,        
+      15000,        
       NULL,         
       1,            
       &Task1,       
@@ -72,13 +72,13 @@ void setup() {
 void TaskSheldure( void * pvParameters ){
   for(;;) {
     loopSheldure ();
-    //MDNS.update();
+    server.handleClient ();
+    delay (25);
   } 
 }
 
 void loop() {	
   Ws2812Loop ();
-  server.handleClient ();
 }
 
 

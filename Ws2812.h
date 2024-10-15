@@ -21,7 +21,8 @@ uint16_t CountLed = 0;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel (CountLed, PIN, NEO_GRB + NEO_KHZ800); 
 
-uint8_t step;
+uint8_t step = 0;
+uint8_t stepOld = 1;
 uint8_t Speed = 10;
 uint8_t BlindLed = 50;
 
@@ -311,6 +312,7 @@ void RunStr2 (uint8_t wait)
 
 void Ws2812SetMode (String Mode) 
 {
+  stepOld = step;
   step = Mode.toInt ();
 }
 

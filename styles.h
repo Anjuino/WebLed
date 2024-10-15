@@ -1,27 +1,36 @@
 const char mystyle[] PROGMEM = R"=====(
+
+td {
+   width: 1%;
+}
+table, th, td {
+   text-align: center;     
+   border: 4px solid white;
+   margin-left: auto;
+   margin-right: auto;
+}
+
 p,b {
    text-align: center;
  }
- 
- input[type='text']{
+
+input[type='text']{
    margin: 5%;
    margin-left: 38%;
    width: 25%;
    font-size: 50px;
- }
+}
 
- input[type='time'] {
+input[type='time'] {
+   font-size: 54px;
+}  
 
-   margin-left: 5%;
-   font-size: 40px;
- }  
-
- input[type='checkbox'] {
-   top: 17px;
-   position: relative;
-   width: 25%;
-   height: 60px;
- }
+input[type='checkbox'] {
+    top: 6px;
+    position: relative;
+    width: 100px;
+    height: 70px;
+}
 
  input[type='range'] {
    accent-color: #ffb500;

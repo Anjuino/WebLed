@@ -1,4 +1,5 @@
 const char SettingPage[] PROGMEM = R"=====(
+
 <!DOCTYPE html>
  <head>
     <meta charset="utf-8">
@@ -10,8 +11,18 @@ const char SettingPage[] PROGMEM = R"=====(
     <div class="container">
        <div class="wrapper">
          <p>Расписание</p>
-         <p>Выкл:<input type="time" id="timeoff" onchange = "Ledofftime()"></input> <input type="checkbox" onclick="Ledofftime()" id="ledoff"> </input> </p>
-         <p>Вкл: <input type="time" id="timeon"  onchange = "Ledontime()"></input> <input type="checkbox" onclick="Ledontime()" id="ledon"> </input> </p>
+         <table>
+         <tr>
+            <td>Выкл:</td>
+            <td><input type="time" id="timeoff" onchange = "Ledofftime()"></input></td>
+            <td><input type="checkbox" onclick="Ledofftime()" id="ledoff"> </input></td>
+         </tr>
+         <tr>
+            <td>Вкл:</td>
+            <td><input type="time" id="timeon"  onchange = "Ledontime()"></input></td>
+            <td><input type="checkbox" onclick="Ledontime()" id="ledon"> </input></td>
+         </tr>
+      </table>
          <hr>
           <p>Введите количество светодиодов</p>
           <input  type="text" maxlength="3" id="LedCount"> </input>
@@ -20,7 +31,6 @@ const char SettingPage[] PROGMEM = R"=====(
           <br>
           <button type="button" onclick="ResetWifi()"> Сбросить Wifi настройки</button>
           <hr>
-          <br>
           <br>
           <button type="button" onclick="document.location='/'"> На главную</button>
           <br>

@@ -1,6 +1,7 @@
 //#include <ESP8266WiFi.h>        //esp8266
 //#include <WiFiClient.h>         //esp8266
 //#include <ESP8266WebServer.h>   //esp8266
+//#include <ESP8266mDNS.h>
 
 #include <WiFi.h>        //esp32
 #include <WebServer.h>   //esp32
@@ -35,7 +36,9 @@ void ApInit ()
   WiFi.setAutoReconnect (true);
   WiFi.persistent (true);
 
-  MDNS.begin("WebLed");
+  if (MDNS.begin("webled")) {  //Start mDNS
+    Serial.println("MDNS started");
+  } else Serial.println("MDNS false");
 
   /*WiFi.softAP(ssid, password);
   IPAddress local_ip(192,168,2,1);

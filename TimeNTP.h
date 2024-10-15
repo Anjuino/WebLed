@@ -32,7 +32,6 @@ void loopSheldure ()
       if (HourOff == timeClient.getHours()) {
         if (MinuteOff == timeClient.getMinutes()) {
           Ws2812SetMode ("250");
-          Serial.println ("off");
           TimerOff = millis () + 60000;
         }
       }
@@ -46,7 +45,6 @@ void loopSheldure ()
       if (HourOn == timeClient.getHours()) {
         if (MinuteOn == timeClient.getMinutes()) {
           Ws2812SetMode (String (step));
-          Serial.println ("on");
           TimerOn = millis () + 60000;
         }
       }

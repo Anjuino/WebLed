@@ -11,7 +11,7 @@ TaskHandle_t Task1;
 
 SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop
 
-unsigned long timer = 30000;
+//unsigned long timer = 30000;
 
 void setup() {
   Serial.begin (115200);
@@ -72,13 +72,13 @@ void setup() {
 void TaskSheldure( void * pvParameters ){
   for(;;) {
     loopSheldure ();
+    //MDNS.update();
   } 
 }
 
 void loop() {	
   Ws2812Loop ();
   server.handleClient ();
-  loopSheldure ();
 }
 
 

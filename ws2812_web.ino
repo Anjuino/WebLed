@@ -1,13 +1,15 @@
 bool FlagLed;
 uint8_t FlagResetWifi = 0;
 
+TaskHandle_t Task1;
+
 #include <EEPROM.h>
 #include <WiFiManager.h>
 #include "Ws2812.h"
 #include "TimeNTP.h"
 #include "Web.h"
 
-SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop. Для esp32
+SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop
 
 unsigned long timer = 30000;
 
@@ -26,7 +28,7 @@ void setup() {
   }
 
   bool res;
-  res = wm.autoConnect ("ESPLed","password"); // password protected ap
+  res = wm.autoConnect ("ESPLed","password");
 
   if(!res) {
     Serial.println ("Failed to connect");
@@ -47,28 +49,36 @@ void setup() {
 
     Serial.println (CountLed);
 
-    /*EEPROM.get (0, Speed);
-    EEPROM.get (2, step);
-    EEPROM.get (4, BlindLed);
-    EEPROM.get (12, r1);
-    EEPROM.get (14, g1);
-    EEPROM.get (16, b1);*/
-   
     Ws2812Init ();
-    delay (1000);
+    delay (100);
     ApInit (); 
-    delay (1000);
+    delay (100);
     ServerStart ();
-    delay (2000);
+    delay (200);
     TimeInit ();
+
+    xTaskCreatePinnedToCore (
+      TaskSheldure, 
+      "Task1",      
+      10000,        
+      NULL,         
+      1,            
+      &Task1,       
+      0);                            
+    delay(500); 
   }
+}
+
+void TaskSheldure( void * pvParameters ){
+  for(;;) {
+    loopSheldure ();
+  } 
 }
 
 void loop() {	
   Ws2812Loop ();
   server.handleClient ();
   loopSheldure ();
-  delay (1);
 }
 
 

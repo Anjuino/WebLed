@@ -15,14 +15,9 @@
 #define OFF     250
 
 #define PIN 27 // esp32
-//#define PIN 0 // esp8266 - D3
+
 
 uint16_t CountLed = 0;
-//#define count_led 120 // количество светодиодов 4 метра
-//#define count_led 150 // количество светодиодов 5 метров
-//#define count_led 60 // количество светодиодов 2 метра
-//#define count_led 24 // количество светодиодов круг  
-//#define count_led 64 // количество светодиодов  матрица
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel (CountLed, PIN, NEO_GRB + NEO_KHZ800); 
 
@@ -32,7 +27,7 @@ uint8_t BlindLed = 50;
 
 bool flag = true;
 
-static int posUp = 0; // Starting position of the "running lights"
+static int posUp = 0; 
 static int posDown = 0;
 
 uint8_t r1 = 255;
@@ -68,16 +63,11 @@ void Ws2812Init ()
   strip.show ();
   delay (50);
   strip.setBrightness (BlindLed);
-  if (step == 0) {
-    //Ws2812SetColor (EEPROM.read (6), EEPROM.read (8), EEPROM.read (10));
-  }
 }
 
 void Ws2812SetSpeed (uint8_t SpeedRecv) 
 {
   Speed = SpeedRecv;
-  //EEPROM.put (0, Speed);
-  //EEPROM.commit ();
 }
 
 uint32_t Wheel (byte WheelPos) 
@@ -322,8 +312,6 @@ void RunStr2 (uint8_t wait)
 void Ws2812SetMode (String Mode) 
 {
   step = Mode.toInt ();
-  //EEPROM.put (2, step);
-  //EEPROM.commit ();
 }
 
 void Ws2812Loop () 

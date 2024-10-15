@@ -3,11 +3,19 @@
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
-String OldTime;
-uint64_t Timer = 0;
-bool stateOnOff = false;
-int Hour = 0;
-int Minute = 0;
+
+String OldTimeOff;
+String OldTimeOn;
+uint64_t TimerOff = 0;
+uint64_t TimerOn = 0;
+bool stateOff = false;
+bool stateOn  = false;
+
+int HourOff = 0;
+int MinuteOff = 0;
+
+int HourOn = 0;
+int MinuteOn = 0;
 
 void TimeInit ()
 {
@@ -15,17 +23,31 @@ void TimeInit ()
   timeClient.setTimeOffset(25200); // +7 Часовой пояс 
 }
 
-
 void loopSheldure ()
 {
-  if (stateOnOff) {
-    if (millis () > Timer) {
+  if (stateOff) {
+    if (millis () > TimerOff) {
       timeClient.update();
-      Timer = millis () + 20000;
-      if (timeClient.getHours() == Hour) {
-        if (timeClient.getMinutes() == Minute) {
+      TimerOff = millis () + 20000;
+      if (HourOff == timeClient.getHours()) {
+        if (MinuteOff == timeClient.getMinutes()) {
           Ws2812SetMode ("250");
-          Timer = millis () + 60000;
+          Serial.println ("off");
+          TimerOff = millis () + 60000;
+        }
+      }
+    }
+  }
+
+  if (stateOn) {
+    if (millis () > TimerOn) {
+      timeClient.update();
+      TimerOn = millis () + 20000;
+      if (HourOn == timeClient.getHours()) {
+        if (MinuteOn == timeClient.getMinutes()) {
+          Ws2812SetMode (String (step));
+          Serial.println ("on");
+          TimerOn = millis () + 60000;
         }
       }
     }

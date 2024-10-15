@@ -6,11 +6,11 @@ const char mypage[] PROGMEM = R"=====(
     <link rel='stylesheet' href='styles.css'>
  </head>
 
- <body>
+ <body onload="onload()">
     <div class="container">
        <div class="wrapper">
           <p> Выбрать обычный цвет</p>
-          <input type="color" id = "hex">
+          <input type="color" id = "hex" value="#FF0000">
           <button type="button" onclick="SetMode()"> Включить</button>
           <hr>
           <br>
@@ -55,6 +55,11 @@ const char mypage[] PROGMEM = R"=====(
 
 <script>
 
+function onload () {
+   GetBlind();
+   GetSpeed();
+}
+
 function ChangeEffect() 
 {
   var i = Numeffect.value;
@@ -65,7 +70,8 @@ function ChangeEffect()
       inputt.textContent = 'Выбрать цвет эффекта';
       var input = document.createElement("input");
       input.setAttribute("type", "color");
-      input.setAttribute("id", "hex1");
+      input.setAttribute("id", "hex1"); 
+      input.setAttribute("value", "#FF0000");
       container.append(inputt);
       container.append(input);
     }
@@ -127,6 +133,30 @@ function LedOff() {
     }
   };
   xhttp.open("GET", "ledoff?Mode=" + 250, true);
+  xhttp.send();
+}
+
+function GetBlind() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var State = this.responseText;
+      document.getElementById("flying").value = State;
+    }
+  };
+  xhttp.open("GET", "getBlind" , true);
+  xhttp.send();
+}
+
+function GetSpeed() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var State = this.responseText;
+      document.getElementById("Speed").value = State;
+    }
+  };
+  xhttp.open("GET", "getSpeed" , true);
   xhttp.send();
 }
 

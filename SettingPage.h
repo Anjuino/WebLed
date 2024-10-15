@@ -11,6 +11,7 @@ const char SettingPage[] PROGMEM = R"=====(
        <div class="wrapper">
          <p>Расписание</p>
          <p>Выкл:<input type="time" id="timeoff" onchange = "Ledofftime()"></input> <input type="checkbox" onclick="Ledofftime()" id="ledoff"> </input> </p>
+         <p>Вкл: <input type="time" id="timeon"  onchange = "Ledontime()"></input> <input type="checkbox" onclick="Ledontime()" id="ledon"> </input> </p>
          <hr>
           <p>Введите количество светодиодов</p>
           <input  type="text" maxlength="3" id="LedCount"> </input>
@@ -18,8 +19,10 @@ const char SettingPage[] PROGMEM = R"=====(
           <hr>
           <br>
           <button type="button" onclick="ResetWifi()"> Сбросить Wifi настройки</button>
+          <hr>
           <br>
           <br>
+          <button type="button" onclick="document.location='/'"> На главную</button>
           <br>
           <br>
           <br>
@@ -31,8 +34,11 @@ const char SettingPage[] PROGMEM = R"=====(
 <script>
 
 function onload () {
-   GetState();
-   GetTime();
+   GetStateOnOff("Off");
+   GetStateOnOff("On");
+
+   GetTime("Off");
+   GetTime("On");
 }
 
 function SetCount() {
@@ -54,22 +60,29 @@ function SetCount() {
    xhttp.send();
 }
 
-function GetState() {
+function GetStateOnOff(In1) {
    var xhttp = new XMLHttpRequest();
    xhttp.onreadystatechange = function() {
 
    if (this.readyState == 4 && this.status == 200) {
       var State = this.responseText;
-      if (State == "true") document.getElementById("ledoff").checked = true;
-      else                 document.getElementById("ledoff").checked = false;
-      
+      if (In1 == "Off") {
+        if (State == "true") document.getElementById("ledoff").checked = true;
+        else                 document.getElementById("ledoff").checked = false;
+      }
+
+      if (In1 == "On") {
+        if (State == "true") document.getElementById("ledon").checked = true;
+        else                 document.getElementById("ledon").checked = false;
+      } 
       }
    };
-   xhttp.open("GET", "getState", true);
+   if (In1 == "On")   xhttp.open("GET", "getState?On = Ok", true);
+   if (In1 == "Off")  xhttp.open("GET", "getState?Off = Ok", true);
    xhttp.send();
 }
 
-function GetTime() {
+function GetTime(In1) {
    var xhttp = new XMLHttpRequest();
    xhttp.onreadystatechange = function() {
 
@@ -84,11 +97,13 @@ function GetTime() {
 
       var timeAll = timeH + ":" + timeM;
 
-      document.getElementById("timeoff").value = timeAll;
+      if (In1 == "Off") document.getElementById("timeoff").value = timeAll;
+      if (In1 == "On") document.getElementById("timeon").value = timeAll;
    
    }
    };
-   xhttp.open("GET", "getTime", true);
+   if (In1 == "On") xhttp.open("GET", "getTime?On = Ok", true);
+   if (In1 == "Off") xhttp.open("GET", "getTime?Off = Ok", true);
    xhttp.send();
 }
 
@@ -97,9 +112,8 @@ function Ledofftime() {
    xhttp.onreadystatechange = function() {
    if (this.readyState == 4 && this.status == 200) {
       var Resp = this.responseText;
-      if (Resp == "OK")                          alert("Расписание включено");
-      //if (Resp == "OKwithoutSheld")              alert("Время установлено, но расписание не включено");
-      if (Resp == "false")                       alert("Расписание отключено");
+      if (Resp == "OK")     alert("Расписание включено");
+      if (Resp == "false")  alert("Расписание отключено");
 
    }
    };
@@ -120,6 +134,37 @@ function Ledofftime() {
    }
    else {
       xhttp.open("GET", "ledofftime?state=" + state + "&T=" + time, true);
+      xhttp.send();
+   }
+}
+
+function Ledontime() {
+   var xhttp = new XMLHttpRequest();
+   xhttp.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+      var Resp = this.responseText;
+      if (Resp == "OK")     alert("Расписание включено");
+      if (Resp == "false")  alert("Расписание отключено");
+
+   }
+   };
+   var time  = document.getElementById("timeon").value.toString();
+   var state = document.getElementById("ledon").checked;
+
+   console.log(time);
+
+   if (state) {
+      if (time) {
+         xhttp.open("GET", "ledontime?state=" + state + "&T=" + time, true);
+         xhttp.send();
+      }
+      else {
+         alert("Время не установлено");
+         document.getElementById("ledon").checked = false;
+      }
+   }
+   else {
+      xhttp.open("GET", "ledontime?state=" + state + "&T=" + time, true);
       xhttp.send();
    }
 }

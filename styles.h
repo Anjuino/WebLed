@@ -19,7 +19,6 @@ p,b {
  input[type='checkbox'] {
    top: 17px;
    position: relative;
-   margin-left: 10%;
    width: 25%;
    height: 60px;
  }

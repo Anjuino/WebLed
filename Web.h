@@ -4,13 +4,11 @@
 
 #include <WiFi.h>        //esp32
 #include <WebServer.h>   //esp32
+#include <ESPmDNS.h>
 
 #include "page.h"
 #include "SettingPage.h"
 #include "styles.h"
-
-//const char* ssid = "Led";  
-//const char* password = "12345678"; 
 
 //ESP8266WebServer server (80);     //esp8266
 WebServer server(80);           // esp32
@@ -32,14 +30,13 @@ void ApInit ()
   IPAddress local_ip (ip1,ip2,ip3,ip4);
   IPAddress subnet (255,255,255,0);
 
-  (WiFi.config (local_ip, WiFi.gatewayIP (), subnet));
+  WiFi.config (local_ip, WiFi.gatewayIP (), subnet, WiFi.gatewayIP ());
 
   WiFi.setAutoReconnect (true);
   WiFi.persistent (true);
 
-  //WiFi.setSleepMode (WIFI_NONE_SLEEP);
+  MDNS.begin("WebLed");
 
-  
   /*WiFi.softAP(ssid, password);
   IPAddress local_ip(192,168,2,1);
   IPAddress gateway(192,168,2,1);
@@ -74,12 +71,6 @@ void handlemode (void) {
 
   Ws2812SetMode ("0");
   Ws2812SetColor (R.toInt (), G.toInt (), B.toInt ());
-
-  /*EEPROM.put (6, R.toInt());
-  EEPROM.put (8, G.toInt());
-  EEPROM.put (10, B.toInt());
-
-  EEPROM.commit ();*/
 }
 
 void handleoff (void) {
@@ -102,13 +93,9 @@ void handleblind (void) {
   delay (1);
 
   String Tag = server.arg ("Blind");
-  uint8_t Blinds = Tag.toInt ();
-  strip.setBrightness (Blinds * 1.9);
-  uint8_t Blind = Blinds * 1.9;
+  BlindLed = Tag.toInt ();
+  strip.setBrightness (BlindLed * 1.9);
   strip.show (); 
-  
-  /*EEPROM.put (4, Blind);
-  EEPROM.commit ();*/
 }
 
 void handlereset (void) {
@@ -157,15 +144,7 @@ void handleeffects (void) {
     String R = server.arg ("R");
     String G = server.arg ("G");
     String B = server.arg ("B");
-    if (R == "0" && G == "0" && B == "0") {
 
-    } 
-    else {
-      /*EEPROM.put (12, R.toInt());
-      EEPROM.put (14, G.toInt());
-      EEPROM.put (16, B.toInt());
-      EEPROM.commit ();*/
-    }
     r1 = R.toInt ();
     g1 = G.toInt ();
     b1 = B.toInt ();
@@ -173,15 +152,36 @@ void handleeffects (void) {
   Ws2812SetMode (Tag);
 }
 
-void handleGetState (void) {
+void handleGetState (void) 
+{
 
-  if (stateOnOff) server.send (200, "text/plane", "true");
-  else            server.send (200, "text/plane", "false");
+  String On = server.arg ("On");
+  String Off = server.arg ("Off");
+
+  if (Off) {
+    if (stateOff)   server.send (200, "text/plane", "true");
+    else            server.send (200, "text/plane", "false");
+  }
+
+  if (On) {
+    if (stateOn)   server.send (200, "text/plane", "true");
+    else            server.send (200, "text/plane", "false");
+  }
 
 }
 
-void SetTime (String time, String state) {
+void handleGetBlind (void) 
+{
+  server.send (200, "text/plane", String (BlindLed));
+}
 
+void handleGetSpeed (void) 
+{
+  server.send (200, "text/plane", String(Speed));
+}
+
+void SetTime (String time, String state, bool IsOnOff) 
+{
   if (time) {
     Serial.println (time);
     char *str = strdup (time.c_str());
@@ -195,19 +195,28 @@ void SetTime (String time, String state) {
 
     if (HourT.charAt(0) == '0') {
       String H = String (HourT.charAt(1));
-      Hour = H.toInt();
+
+      if (IsOnOff) HourOff = H.toInt();
+      else         HourOn  = H.toInt();
     }
-    else Hour = HourT.toInt();
+    else {
+      if (IsOnOff) HourOff = HourT.toInt();
+      else         HourOn  = HourT.toInt();
+    }
 
     if (MinuteT.charAt(0) == '0') {
       String T = String (MinuteT.charAt(1));
-      Minute = T.toInt();
+      
+      if (IsOnOff) MinuteOff = T.toInt();
+      else         MinuteOn  = T.toInt();
     }
-    else Minute = MinuteT.toInt();
+    else {
+      if (IsOnOff) MinuteOff = MinuteT.toInt();
+      else         MinuteOn  = MinuteT.toInt();
+    }
   }
 
   if (state == "true")   server.send (200, "text/plane", "OK");
-  if (state == "false")  server.send (200, "text/plane", "OKwithoutSheld");
   if (state == "Non")    server.send (200, "text/plane", "false");
 }
 
@@ -216,37 +225,76 @@ void handleLedOffTime (void) {
   String State = server.arg ("state");
 
   if (State == "true") {
-    stateOnOff = true;
+    stateOff = true;
 
     String Time = server.arg ("T");
 
-    SetTime (Time, State);
+    SetTime (Time, State, true);
 
-    OldTime = Time;
+    OldTimeOff = Time;
   }
 
   else {
-    stateOnOff = false;
+    stateOff = false;
 
     String Time = server.arg ("T");
 
-    if (OldTime == Time) SetTime (Time, "Non");
-    else                 SetTime (Time, State);
+    if (OldTimeOff == Time) SetTime (Time, "Non", true);
+    else                    SetTime (Time, State, true);
 
-    OldTime = Time;
+    OldTimeOff = Time;
+  }                
+}
+
+void handleLedOnTime (void) {
+
+  String State = server.arg ("state");
+
+  if (State == "true") {
+    stateOn = true;
+
+    String Time = server.arg ("T");
+
+    SetTime (Time, State, false);
+
+    OldTimeOn = Time;
+  }
+
+  else {
+    stateOn = false;
+
+    String Time = server.arg ("T");
+
+    if (OldTimeOn == Time)  SetTime (Time, "Non", false);
+    else                    SetTime (Time, State, false);
+
+    OldTimeOn = Time;
   }                
 }
 
 
-void handleGetTime (void) {
+void handleGetTimeOnOff (void) {
 
   String HourT;
   String MinuteT;
+  String TimeAll;
 
-  HourT = String(Hour);
-  MinuteT = String(Minute);
+  String On = server.arg ("On");
+  String Off = server.arg ("Off");
 
-  String TimeAll = HourT + ":" + MinuteT;
+  if (Off) {
+    HourT = String(HourOff);
+    MinuteT = String(MinuteOff);
+
+    TimeAll = HourT + ":" + MinuteT;
+  }
+
+  if (On) {
+    HourT = String(HourOn);
+    MinuteT = String(MinuteOn);
+
+    TimeAll = HourT + ":" + MinuteT;
+  }
 
   server.send (200, "text/plane", TimeAll);
 }
@@ -254,7 +302,8 @@ void handleGetTime (void) {
 
 void ServerStart (void) {
   if (FlagLed) server.on ("/", handleSettingPage);                     // Страница при первом запуске
-  else         server.on ("/", handleStartPage);                     // Страница при первом запуске
+  else         server.on ("/", handleStartPage);                       // Страница при первом запуске
+
   server.on ("/styles.css", handlecss);
   server.on ("/mode", handlemode); 
   server.on ("/ledoff", handleoff);                    
@@ -265,8 +314,14 @@ void ServerStart (void) {
   server.on ("/setcount", handleSetCount);
   server.on ("/resetWifi", handleResetWifi);
 
+  server.on ("/getBlind", handleGetBlind);
+  server.on ("/getSpeed", handleGetSpeed);
+
   server.on ("/getState", handleGetState);
-  server.on ("/ledofftime", handleLedOffTime);  
-  server.on ("/getTime", handleGetTime);                    
+  server.on ("/ledofftime", handleLedOffTime);
+  server.on ("/ledontime", handleLedOnTime);    
+  server.on ("/getTime", handleGetTimeOnOff);    
+
   server.begin ();
+
 }

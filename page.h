@@ -22,8 +22,11 @@ const char mypage[] PROGMEM = R"=====(
             <br>
           </section>
         </div>
+        <br>
         <p> Яркость ленты</p>
         <input name="flevel" id="flying" type="range" min="1" max="100" step="1" onchange = "SetBlind()">
+        <br>
+        <br>
         <br>
         <br>
          <div class="slider">

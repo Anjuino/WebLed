@@ -230,8 +230,9 @@ void SetTime (String time, String state, bool IsOnOff)
     }
   }
 
-  if (state == "true")   server.send (200, "text/plane", "OK");
-  if (state == "Non")    server.send (200, "text/plane", "false");
+  if (state == "true")    server.send (200, "text/plane", "OK");
+  if (state == "false")   server.send (200, "text/plane", "Check");
+  if (state == "Non")     server.send (200, "text/plane", "false");
 }
 
 void handleLedOffTime (void) {

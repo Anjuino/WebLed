@@ -1,5 +1,5 @@
 bool FlagLed;
-bool FlagOneOn = false;
+bool FlagOneOn = false;    // Флаг для разового включения
 uint8_t FlagResetWifi = 0;
 
 TaskHandle_t Task1;

@@ -124,7 +124,6 @@ function Ledofftime() {
       var Resp = this.responseText;
       if (Resp == "OK")     alert("Расписание включено");
       if (Resp == "false")  alert("Расписание отключено");
-
    }
    };
    var time  = document.getElementById("timeoff").value.toString();

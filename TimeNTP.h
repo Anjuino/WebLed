@@ -46,6 +46,7 @@ void loopSheldure ()
       if (HourOn == timeClient.getHours()) {
         if (MinuteOn == timeClient.getMinutes()) {
           Serial.println (String (stepOld));
+          if (stepOld == 249) FlagOneOn = true;
           Ws2812SetMode (String (stepOld));
           Serial.println ("On");
           TimerOn = millis () + 60000;

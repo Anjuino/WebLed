@@ -1,6 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define NOTHING     0
+
 #define RAINBOW     1
 #define RUNSTR      2
 #define STROBE      3
@@ -11,8 +12,8 @@
 #define CHAOS       8
 #define RUNSTR2     9
 
-
-#define OFF     250
+#define STATIC     249
+#define OFF        250
 
 #define PIN 27 // esp32
 
@@ -310,6 +311,7 @@ void RunStr2 (uint8_t wait)
   }
 }
 
+
 void Ws2812SetMode (String Mode) 
 {
   stepOld = step;
@@ -377,9 +379,18 @@ void Ws2812Loop ()
         Chaos (Speed);
      }
 
-      case RUNSTR2:
+     case RUNSTR2:
      {
         RunStr2 (Speed);
+        break;
+     }
+
+     case STATIC:
+     {  
+        if (FlagOneOn) {              // Делаю включение 1 раз т.к эффект статичный
+          Ws2812SetColor (r1, g1, b1);
+          FlagOneOn = false;
+        }
         break;
      }
   }

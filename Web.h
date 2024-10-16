@@ -73,8 +73,13 @@ void handlemode (void) {
   String G = server.arg ("G");
   String B = server.arg ("B");
 
-  Ws2812SetMode ("0");
-  Ws2812SetColor (R.toInt (), G.toInt (), B.toInt ());
+  r1 = R.toInt ();
+  g1 = G.toInt ();
+  b1 = B.toInt ();
+
+  Ws2812SetMode ("249");
+  FlagOneOn = true;
+  //Ws2812SetColor (R.toInt (), G.toInt (), B.toInt ());
 }
 
 void handleoff (void) {

@@ -1,4 +1,5 @@
 bool FlagLed;
+bool FlagOneOn = false;
 uint8_t FlagResetWifi = 0;
 
 TaskHandle_t Task1;
@@ -10,8 +11,6 @@ TaskHandle_t Task1;
 #include "Web.h"
 
 SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop
-
-//unsigned long timer = 30000;
 
 void setup() {
   Serial.begin (115200);

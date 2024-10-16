@@ -1,9 +1,24 @@
 const char mystyle[] PROGMEM = R"=====(
 
+.slider {
+  background-color: #00000052;
+	scroll-snap-type: x mandatory;	
+	display: flex;
+	-webkit-overflow-scrolling: touch;
+	overflow-x: scroll;
+}
+section {
+	padding: 10px;
+	min-width: 94vw;
+	scroll-snap-align: start;
+  position: relative;
+}
+
 td {
    width: 1%;
 }
 table, th, td {
+   background-color: rgb(41 40 40 / 39%);
    text-align: center;     
    border: 4px solid white;
    margin-left: auto;
@@ -115,7 +130,7 @@ input[type='checkbox'] {
  
  .container {
    color: rgb(255, 255, 255);
-   padding-top: 5%;
+   padding-top: 15%;
    padding-left: 20px;
    padding-right: 20px;
  }

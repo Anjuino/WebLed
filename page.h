@@ -5,55 +5,68 @@ const char mypage[] PROGMEM = R"=====(
     <title>Led</title>
     <link rel='stylesheet' href='styles.css'>
  </head>
-
  <body onload="onload()">
     <div class="container">
        <div class="wrapper">
-          <p> Выбрать обычный цвет</p>
-          <input type="color" id = "hex" value="#FF0000">
-          <button type="button" onclick="SetMode()"> Включить</button>
-          <hr>
-          <br>
-          <p> Выбрать эффект</p>
-
-          <select id="Numeffect" onchange="ChangeEffect()">
-            <option value="1">Радуга</option>
-            <option value="2">Бегущий огонь</option>
-            <option value="3">Бегущие огни</option>
-            <option value="4">Одиночные огни (случайные)</option>
-            <option value="5">Вспышки</option>
-            <option value="6">Смена цветов</option>
-            <option value="7">Бегущий огонь 2</option>
-            <option value="8">Хаос</option>
-            <option value="9">2 бегущих огня</option>
-          </select>
-
-          <div class="container1"></div>
-
-          <button type="button" onclick="Seteffect()">Задать эффект</button>
-
-          <hr>
-          <br>
-          <p> Cкорость эффекта</p>
-
-          <input id="Speed" type="range" min="1" max="20" step="1" onchange = "SetSpeed()">
-          <hr>
-          <br>
-
-          <p> Яркость ленты</p>
-
-          <input name="flevel" id="flying" type="range" min="1" max="100" step="1" onchange = "SetBlind()">
-          <hr>
-          <br>
-          <button type="button" onclick="LedOff()">  Выключить ленту</button>
-          <hr>
-          <br>
-          <button type="button" onclick="document.location='page.html'"> Настройки</button>
+        <div class="slider">
+          <section>
+            <br>
+            <button type="button" onclick="document.location='page.html'"> Настройки</button>
+            <br>
+            <br>
+          </section>
+          <section>
+            <br> 
+            <button type="button" onclick="LedOff()">  Выключить ленту</button>
+            <br>
+            <br>
+          </section>
+        </div>
+        <p> Яркость ленты</p>
+        <input name="flevel" id="flying" type="range" min="1" max="100" step="1" onchange = "SetBlind()">
+        <br>
+        <br>
+         <div class="slider">
+            <section>
+               <p> Выбрать обычный цвет</p>
+               <input type="color" id = "hex" value="#FF0000">
+               <button type="button" onclick="SetMode()"> Включить</button>
+            </section>
+            <section>
+               <p> Выбрать эффект</p>
+               <select id="Numeffect" onchange="ChangeEffect()">
+                  <option value="1">Радуга</option>
+                  <option value="2">Бегущий огонь</option>
+                  <option value="3">Бегущие огни</option>
+                  <option value="4">Одиночные огни (случайные)</option>
+                  <option value="5">Вспышки</option>
+                  <option value="6">Смена цветов</option>
+                  <option value="7">Бегущий огонь 2</option>
+                  <option value="8">Хаос</option>
+                  <option value="9">2 бегущих огня</option>
+                </select>
+                <div class="container1"></div>
+                <button type="button" onclick="Seteffect()">Задать эффект</button>
+                <p> Cкорость эффекта</p>
+                <input id="Speed" type="range" min="1" max="20" step="1" onchange = "SetSpeed()">
+                <br>
+                <br>
+            </section>
+         </div>
+         <br>
+         <br>   
     </div>
-  </div>   
+  </div>
+
 </body>
 
 <script>
+
+const init = function(){
+	let items = document.querySelectorAll('section');
+	cssScrollSnapPolyfill()
+}
+init();
 
 function onload () {
    GetBlind();

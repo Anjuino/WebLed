@@ -10,7 +10,7 @@ TaskHandle_t Task1;
 #include "TimeNTP.h"
 #include "Web.h"
 
-SET_LOOP_TASK_STACK_SIZE(40*1024); // Задаем размер стека для Loop
+SET_LOOP_TASK_STACK_SIZE(45*1024); // Задаем размер стека для Loop
 
 void setup() {
   Serial.begin (115200);
@@ -59,7 +59,7 @@ void setup() {
     xTaskCreatePinnedToCore (
       TaskSheldure, 
       "Task1",      
-      15000,        
+      20000,        
       NULL,         
       1,            
       &Task1,       
@@ -71,13 +71,13 @@ void setup() {
 void TaskSheldure( void * pvParameters ){
   for(;;) {
     loopSheldure ();
-    server.handleClient ();
     delay (25);
   } 
 }
 
 void loop() {	
   Ws2812Loop ();
+  server.handleClient ();
 }
 
 

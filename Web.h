@@ -116,6 +116,8 @@ void handleSetCount (void) {
   server.send (200, "text/plane", "OK");
   String Tag = server.arg ("CountLed");
 
+  Ws2812SetColor (0, 0, 0); 
+
   int CountLed = Tag.toInt();
 
   if (CountLed > 500) CountLed = 500;
@@ -123,8 +125,6 @@ void handleSetCount (void) {
 
   EEPROM.put (0, CountLed);
   EEPROM.commit ();
-
-  Ws2812SetColor (0, 0, 0); 
 
   delay (100);
   ESP.restart(); 

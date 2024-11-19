@@ -22,18 +22,14 @@ const char mypage[] PROGMEM = R"=====(
             <br>
           </section>
         </div>
-        <br>
-        <p> Яркость ленты</p>
-        <input name="flevel" id="flying" type="range" min="1" max="100" step="1" onchange = "SetBlind()">
-        <br>
-        <br>
-        <br>
-        <br>
          <div class="slider">
             <section>
                <p> Выбрать обычный цвет</p>
                <input type="color" id = "hex" value="#FF0000">
                <button type="button" onclick="SetMode()"> Включить</button>
+               <br>
+               <p> Яркость ленты</p>
+               <input name="flevel" id="flying1" type="range" min="1" max="100" step="1" onchange = "SetBlind(1)">
             </section>
             <section>
                <p> Выбрать эффект</p>
@@ -52,7 +48,8 @@ const char mypage[] PROGMEM = R"=====(
                 <button type="button" onclick="Seteffect()">Задать эффект</button>
                 <p> Cкорость эффекта</p>
                 <input id="Speed" type="range" min="1" max="20" step="1" onchange = "SetSpeed()">
-                <br>
+                <p> Яркость ленты</p>
+                <input name="flevel" id="flying2" type="range" min="1" max="100" step="1" onchange = "SetBlind(2)">
                 <br>
             </section>
          </div>
@@ -65,11 +62,6 @@ const char mypage[] PROGMEM = R"=====(
 
 <script>
 
-const init = function(){
-	let items = document.querySelectorAll('section');
-	cssScrollSnapPolyfill()
-}
-init();
 
 function onload () {
    GetBlind();
@@ -157,7 +149,8 @@ function GetBlind() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       var State = this.responseText;
-      document.getElementById("flying").value = State;
+      document.getElementById("flying1").value = State;
+      document.getElementById("flying2").value = State;
     }
   };
   xhttp.open("GET", "getBlind" , true);
@@ -176,13 +169,20 @@ function GetSpeed() {
   xhttp.send();
 }
 
-function SetBlind() {
+function SetBlind(In1) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
     }
   };
-  xhttp.open("GET", "blind?Blind=" + document.getElementById("flying").value, true);
+  if (In1 == 1 ) {
+    xhttp.open("GET", "blind?Blind=" + document.getElementById("flying1").value, true);
+    document.getElementById("flying2").value = document.getElementById("flying1").value;
+  }
+  if (In1 == 2)  {
+    xhttp.open("GET", "blind?Blind=" + document.getElementById("flying2").value, true);
+    document.getElementById("flying1").value = document.getElementById("flying2").value;
+  }
   xhttp.send();
 }
 

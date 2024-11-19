@@ -1,8 +1,3 @@
-//#include <ESP8266WiFi.h>        //esp8266
-//#include <WiFiClient.h>         //esp8266
-//#include <ESP8266WebServer.h>   //esp8266
-//#include <ESP8266mDNS.h>
-
 #include <WiFi.h>        //esp32
 #include <WebServer.h>   //esp32
 #include <ESPmDNS.h>
@@ -11,7 +6,6 @@
 #include "SettingPage.h"
 #include "styles.h"
 
-//ESP8266WebServer server (80);     //esp8266
 WebServer server(80);           // esp32
 
 void ApInit () 
@@ -36,36 +30,33 @@ void ApInit ()
   WiFi.setAutoReconnect (true);
   WiFi.persistent (true);
 
-  if (MDNS.begin("webled")) {  //Start mDNS
-    Serial.println("MDNS started");
-  } else Serial.println("MDNS false");
+  if (MDNS.begin ("webled")) {  //Start mDNS
+    Serial.println ("MDNS started");
+  } else Serial.println ("MDNS false");
 
   MDNS.addService("http", "tcp", 80);
-  /*WiFi.softAP(ssid, password);
-  IPAddress local_ip(192,168,2,1);
-  IPAddress gateway(192,168,2,1);
-  IPAddress subnet(255,255,255,0);
-  WiFi.softAPConfig(local_ip, gateway, subnet);*/
-  //WiFi.setSleepMode(WIFI_NONE_SLEEP);
 }
 
-void handleStartPage (void) {
+void handleStartPage (void) 
+{
   String page = mypage;
   server.send (200, "text/html", page);
 }
 
-void handleSettingPage (void) {
+void handleSettingPage (void) 
+{
   String page = SettingPage;
   server.send (200, "text/html", page);
 }
 
-void handlecss (void) {
+void handlecss (void) 
+{
   String page = mystyle;
   server.send (200, "text/css", page);
 }
 
-void handlemode (void) {
-
+void handlemode (void) 
+{
   server.send (200, "text/plane", "OK");
   delay (1);
 
@@ -79,7 +70,6 @@ void handlemode (void) {
 
   Ws2812SetMode ("249");
   FlagOneOn = true;
-  //Ws2812SetColor (R.toInt (), G.toInt (), B.toInt ());
 }
 
 void handleoff (void) {
@@ -130,7 +120,8 @@ void handleSetCount (void) {
   ESP.restart(); 
 }
 
-void handleResetWifi (void) {
+void handleResetWifi (void) 
+{
   server.send (200, "text/plane", "OK");
 
   FlagResetWifi = 1;
@@ -140,10 +131,10 @@ void handleResetWifi (void) {
 
   delay (100);
   ESP.restart();
-  
 }
 
-void handleeffects (void) {
+void handleeffects (void) 
+{
   server.send (200, "text/plane", "OK");
   delay (1);
 

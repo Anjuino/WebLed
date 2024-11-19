@@ -26,30 +26,34 @@ void TimeInit ()
 void loopSheldure ()
 {
   if (stateOff) {
-    if (millis () > TimerOff) {
-      timeClient.update();
-      TimerOff = millis () + 20000;
-      if (HourOff == timeClient.getHours()) {
-        if (MinuteOff == timeClient.getMinutes()) {
-          Ws2812SetMode ("250");
-          Serial.println ("Off");
-          TimerOff = millis () + 60000;
+    if (step != 0) {
+      if (millis () > TimerOff) {
+        timeClient.update();
+        TimerOff = millis () + 20000;
+        if (HourOff == timeClient.getHours()) {
+          if (MinuteOff == timeClient.getMinutes()) {
+            Ws2812SetMode ("250");
+            Serial.println ("Off");
+            TimerOff = millis () + 60000;
+          }
         }
       }
     }
   }
 
   if (stateOn) {
-    if (millis () > TimerOn) {
-      timeClient.update();
-      TimerOn = millis () + 20000;
-      if (HourOn == timeClient.getHours()) {
-        if (MinuteOn == timeClient.getMinutes()) {
-          Serial.println (String (stepOld));
-          if (stepOld == 249) FlagOneOn = true;
-          Ws2812SetMode (String (stepOld));
-          Serial.println ("On");
-          TimerOn = millis () + 60000;
+    if (step == 0) {
+      if (millis () > TimerOn) {
+        timeClient.update();
+        TimerOn = millis () + 20000;
+        if (HourOn == timeClient.getHours()) {
+          if (MinuteOn == timeClient.getMinutes()) {
+            Serial.println (String (stepOld));
+            if (stepOld == 249) FlagOneOn = true;
+            Ws2812SetMode (String (stepOld));
+            Serial.println ("On");
+            TimerOn = millis () + 60000;
+          }
         }
       }
     }

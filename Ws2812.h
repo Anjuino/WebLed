@@ -324,74 +324,75 @@ void Ws2812Loop ()
 
      case OFF:
      {
-        Ws2812SetColor (0, 0, 0);
-        step = 0;
-        break;
+      Ws2812SetColor (0, 0, 0);
+      step = 0;
+      break;
      }
      case NOTHING:
      {
-        break;
+      break;
      }
      
      case RAINBOW:
      {
-        rainbowCycle (Speed);
-        break; 
+      rainbowCycle (Speed);
+      break; 
      }
 
      case RUNSTR:
      {
-        RunStr (Speed);
-        break;
+      RunStr (Speed);
+      break;
      }
 
      case STROBE:
      {
-        RunColor (Speed);
-        break;
+      RunColor (Speed);
+      break;
      }
 
      case RANDOMLIGHT:
      {
-        RandomLight (Speed);
-        break;
+      RandomLight (Speed);
+      break;
      }
 
      case SPARK:
      {
-        Sparkle (16,16,16,Speed);
-        break;
+      Sparkle (16,16,16,Speed);
+      break;
      }
 
      case FADE:
      {
-        RGBLoop (Speed);
-        break;
+      RGBLoop (Speed);
+      break;
      } 
+
      case RUNLIGHT:
      {
-        RunningLights (r1,g1,b1, Speed);
-        break;
+      RunningLights (r1,g1,b1, Speed);
+      break;
      }
      
      case CHAOS:
      {
-        Chaos (Speed);
+      Chaos (Speed);
      }
 
      case RUNSTR2:
      {
-        RunStr2 (Speed);
-        break;
+      RunStr2 (Speed);
+      break;
      }
 
      case STATIC:
      {  
-        if (FlagOneOn) {              // Делаю включение 1 раз т.к эффект статичный
-          Ws2812SetColor (r1, g1, b1);
-          FlagOneOn = false;
-        }
-        break;
+      if (FlagOneOn) {              // Делаю включение 1 раз т.к эффект статичный
+        Ws2812SetColor (r1, g1, b1);
+        FlagOneOn = false;
+      }
+      break;
      }
   }
 }

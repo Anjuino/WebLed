@@ -1,5 +1,4 @@
 const char mystyle[] PROGMEM = R"=====(
-
 .slider {
   background-color: #00000052;
 	scroll-snap-type: x mandatory;	
@@ -49,7 +48,7 @@ input[type='checkbox'] {
 
  input[type='range'] {
    accent-color: #ffb500;
-   transform: scaleY(5.0);
+   transform: scaleY(3.0);
    height: 35px;
    width: 100%;
  }
@@ -64,12 +63,7 @@ input[type='checkbox'] {
    height: 184px;
    width: 100%;
  }
- .span {
-   text-align: center;
-   margin-top: 15px;
-   border: 5px double white;
- }
- 
+
  hr {
    margin: -40px auto;
     height: 60px;
@@ -79,7 +73,7 @@ input[type='checkbox'] {
  
  body {
    font-family: system-ui;
-   background: linear-gradient(16deg, #004677, #3f3d93, #850101, #6d008d, #813700, #0c8100, #8c0000, #ad0101, #5e7b00, #b90071b8, #01750a);
+   background: linear-gradient(1deg, #004677, #3f3d93, #850101, #6d008d, #813700, #0c8100, #8c0000, #ad0101, #5e7b00, #b90071b8, #01750a);
    background-size: 2200% 2200%;
    animation: back 51s cubic-bezier(0.44, 0.17, 0.58, 0.92) infinite;
  }
@@ -134,4 +128,5 @@ input[type='checkbox'] {
    padding-left: 20px;
    padding-right: 20px;
  }
+
 )=====";
